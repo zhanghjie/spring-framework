@@ -247,8 +247,13 @@ public abstract class AopUtils {
 		for (Class<?> clazz : classes) {
 			Method[] methods = ReflectionUtils.getAllDeclaredMethods(clazz);
 			for (Method method : methods) {
+				// 只要有一个方法能匹配就返回true 这里就会有一个问题，
+				// 因为在一个目标中可能已有多个方法存在，有的方法是满足这个切点的匹配规则的
+				// 但是也有可能有一些方法是不匹配切点规则的
+				// 这里检测的是只有一个Method满足规则就返回true 所以运行时进行方法拦截的时候 还会有一次运行时的方法切点规则匹配
 				if (introductionAwareMethodMatcher != null ?
 						introductionAwareMethodMatcher.matches(method, targetClass, hasIntroductions) :
+						// 通过方法匹配进行匹配
 						methodMatcher.matches(method, targetClass)) {
 					return true;
 				}
@@ -307,6 +312,7 @@ public abstract class AopUtils {
 		}
 		List<Advisor> eligibleAdvisors = new ArrayList<>();
 		for (Advisor candidate : candidateAdvisors) {
+			// 判断增强器对象是都实现了IntroductionAdvisor
 			if (candidate instanceof IntroductionAdvisor && canApply(candidate, clazz)) {
 				eligibleAdvisors.add(candidate);
 			}
@@ -317,6 +323,7 @@ public abstract class AopUtils {
 				// already processed
 				continue;
 			}
+			// 真正的判断增强器是否适合当前类型
 			if (canApply(candidate, clazz, hasIntroductions)) {
 				eligibleAdvisors.add(candidate);
 			}

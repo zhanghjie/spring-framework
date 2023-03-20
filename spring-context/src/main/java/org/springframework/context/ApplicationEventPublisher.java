@@ -66,6 +66,6 @@ public interface ApplicationEventPublisher {
 	 * @see #publishEvent(ApplicationEvent)
 	 * @see PayloadApplicationEvent
 	 */
-	void publishEvent(Object event);
+	void  publishEvent(Object event);
 
 }

@@ -57,6 +57,7 @@ class PropertySourceRegistry {
 	 * @throws IOException if loading a property source failed
 	 */
 	void processPropertySource(AnnotationAttributes propertySource) throws IOException {
+		// name、encoding、value、factory 都是@PropertySource 类定义的属性，再这里读取使用
 		String name = propertySource.getString("name");
 		if (!StringUtils.hasLength(name)) {
 			name = null;
@@ -65,8 +66,9 @@ class PropertySourceRegistry {
 		if (!StringUtils.hasLength(encoding)) {
 			encoding = null;
 		}
+		// @PropertySource 上配置的值
 		String[] locations = propertySource.getStringArray("value");
-		Assert.isTrue(locations.length > 0, "At least one @PropertySource(value) location is required");
+		Assert.isTrue(locations.length > 0, "At least one  (value) location is required");
 		boolean ignoreResourceNotFound = propertySource.getBoolean("ignoreResourceNotFound");
 
 		Class<? extends PropertySourceFactory> factoryClass = propertySource.getClass("factory");

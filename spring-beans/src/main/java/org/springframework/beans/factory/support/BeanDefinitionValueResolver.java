@@ -336,8 +336,11 @@ public class BeanDefinitionValueResolver {
 	@Nullable
 	private Object resolveReference(Object argName, RuntimeBeanReference ref) {
 		try {
+			// 定义一个存储bean对象的变量
 			Object bean;
+			// 获取另一个Bean应用的Bean类型
 			Class<?> beanType = ref.getBeanType();
+			// 如果引用来自父工厂
 			if (ref.isToParent()) {
 				BeanFactory parent = this.beanFactory.getParentBeanFactory();
 				if (parent == null) {
@@ -350,18 +353,22 @@ public class BeanDefinitionValueResolver {
 					bean = parent.getBean(beanType);
 				}
 				else {
+					// 从父工厂里取出Bean对象
 					bean = parent.getBean(String.valueOf(doEvaluate(ref.getBeanName())));
 				}
 			}
 			else {
 				String resolvedName;
+				// 如果beanType不为空
 				if (beanType != null) {
 					NamedBeanHolder<?> namedBean = this.beanFactory.resolveNamedBean(beanType);
 					bean = namedBean.getBeanInstance();
 					resolvedName = namedBean.getBeanName();
 				}
 				else {
+					// 让resolvedName 引用ref所包装的Bean名称
 					resolvedName = String.valueOf(doEvaluate(ref.getBeanName()));
+					// 获取resolvedName的Bean对象
 					bean = this.beanFactory.getBean(resolvedName);
 				}
 				this.beanFactory.registerDependentBean(resolvedName, this.beanName);

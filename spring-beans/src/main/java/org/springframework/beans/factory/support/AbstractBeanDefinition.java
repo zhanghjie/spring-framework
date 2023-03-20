@@ -1161,7 +1161,9 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 */
 	public void prepareMethodOverrides() throws BeanDefinitionValidationException {
 		// Check that lookup methods exist and determine their overloaded status.
+		// 检查是否有方法定义了lookup-method属性 或者方法被@Lookup修饰
 		if (hasMethodOverrides()) {
+			// 如果有 则设置属性值
 			getMethodOverrides().getOverrides().forEach(this::prepareMethodOverride);
 		}
 	}
@@ -1182,6 +1184,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 		}
 		else if (count == 1) {
 			// Mark override as not overloaded, to avoid the overhead of arg type checking.
+			// 标记方法未被覆盖，避免参数类型检查的开销
 			mo.setOverloaded(false);
 		}
 	}
